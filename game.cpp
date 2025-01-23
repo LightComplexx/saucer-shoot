@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	populateWorld();
 
 	// Enable player to pause game
-	new df::Pause(df::Keyboard::F10);
+	new df::Pause(df::Keyboard::ESCAPE);
 
 	// Run game (this blocks until game loop is over)
 	GM.run();
@@ -61,6 +61,9 @@ void loadResources() {
 	RM.loadSprite("sprites/gamestart-spr.txt", "gamestart");
 	RM.loadSprite("sprites/saucer-spr.txt", "saucer");
 	RM.loadSprite("sprites/ship-spr.txt", "ship");
+	RM.loadSprite("sprites/timebar-spr.txt", "timebar");
+	RM.loadSprite("sprites/slashtext-spr.txt", "slashtext");
+	RM.loadSprite("sprites/flash-spr.txt", "flash");
 }
 
 void populateWorld() {

@@ -13,7 +13,7 @@ private:
 	void moveToStart();
 	void out();
 	void hit(const df::EventCollision* p_c);
-	bool chain_state;
+	bool slash_state;
 	float m_speed;
 
 public:

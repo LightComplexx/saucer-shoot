@@ -62,6 +62,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>C:\Users\Rodrick\Downloads\GitHub_Repositories\DragonFly\game0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,6 +91,8 @@
   <ItemGroup>
     <ClInclude Include="..\Bullet.h" />
     <ClInclude Include="..\EventNuke.h" />
+    <ClInclude Include="..\EventSlash.h" />
+    <ClInclude Include="..\EventSlashEnd.h" />
     <ClInclude Include="..\Explosion.h" />
     <ClInclude Include="..\GameOver.h" />
     <ClInclude Include="..\GameStart.h" />
@@ -97,11 +100,16 @@
     <ClInclude Include="..\Points.h" />
     <ClInclude Include="..\Reticle.h" />
     <ClInclude Include="..\Saucer.h" />
+    <ClInclude Include="..\Slash.h" />
+    <ClInclude Include="..\SlashAttack.h" />
     <ClInclude Include="..\Star.h" />
+    <ClInclude Include="..\Timebar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Bullet.cpp" />
     <ClCompile Include="..\EventNuke.cpp" />
+    <ClCompile Include="..\EventSlash.cpp" />
+    <ClCompile Include="..\EventSlashEnd.cpp" />
     <ClCompile Include="..\Explosion.cpp" />
     <ClCompile Include="..\game.cpp" />
     <ClCompile Include="..\GameOver.cpp" />
@@ -110,7 +118,10 @@
     <ClCompile Include="..\Points.cpp" />
     <ClCompile Include="..\Reticle.cpp" />
     <ClCompile Include="..\Saucer.cpp" />
+    <ClCompile Include="..\Slash.cpp" />
+    <ClCompile Include="..\SlashAttack.cpp" />
     <ClCompile Include="..\Star.cpp" />
+    <ClCompile Include="..\Timebar.cpp" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

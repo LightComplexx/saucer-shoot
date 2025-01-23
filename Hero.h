@@ -16,14 +16,18 @@ private:
     void kbd(const df::EventKeyboard* p_keyboard_event);
     void mouse(const df::EventMouse* p_mouse_event);
     void fire(df::Vector target);
+    void mark(df::Vector target);
     void move(int dy);
     void step();
     void nuke();
+    void slash();
     int move_slowdown;
     int move_countdown;
     int fire_slowdown;
     int fire_countdown;
     int nuke_count;
+    bool can_slash;
+    bool slash_state;
     Reticle* p_reticle;
 
 public:

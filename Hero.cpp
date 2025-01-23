@@ -10,21 +10,26 @@
 #include "ResourceManager.h"
 #include "EventStep.h"
 #include "EventNuke.h"
+#include "EventSlash.h"
+#include "EventSlashEnd.h"
 #include "EventView.h"
 
 // Game includes
 #include "Hero.h"
 #include "Bullet.h"
 #include "GameOver.h"
+#include "Slash.h"
+#include "SlashAttack.h"
 
 Hero::Hero() {
 	// Link to "ship" sprite
 	setSprite("ship");
 
-	// Registers keyboard, mouse, and step events 
+	// Registers keyboard, mouse, step, and slash events 
 	registerInterest(df::KEYBOARD_EVENT);
 	registerInterest(df::STEP_EVENT);
 	registerInterest(df::MSE_EVENT);
+	registerInterest(SLASHEND_EVENT);
 
 	// Sets object type to Hero 
 	setType("Hero");
@@ -43,6 +48,10 @@ Hero::Hero() {
 
 	// Sets the nuke count
 	nuke_count = 1;
+
+	// Sets the Hero's ability to use slash attack 
+	can_slash = true;
+	slash_state = false;
 
 	// Create reticle for firing bullets
 	p_reticle = new Reticle(df::RED);
@@ -70,7 +79,7 @@ Hero::~Hero() {
 // Records keyboard and step events
 int Hero::eventHandler(const df::Event* p_e) {
 	// Keyboard events
-	if (p_e->getType() == df::KEYBOARD_EVENT) {
+	if (!slash_state && p_e->getType() == df::KEYBOARD_EVENT) {
 		const df::EventKeyboard* p_keyboard_event =
 			dynamic_cast <const df::EventKeyboard*> (p_e);
 		kbd(p_keyboard_event);
@@ -91,6 +100,11 @@ int Hero::eventHandler(const df::Event* p_e) {
 		return 1;
 	}
 
+	// SlashEnd events
+	if (slash_state && p_e->getType() == SLASHEND_EVENT) {
+		slash_state = false;
+		return 1;
+	}
 	return 0;
 }
 
@@ -124,8 +138,16 @@ void Hero::mouse(const df::EventMouse* p_mouse_event) {
 	// Pressed button?
 	if ((p_mouse_event->getMouseAction() == df::CLICKED) &&
 		(p_mouse_event->getMouseButton() == df::Mouse::LEFT)) {
-		fire(p_mouse_event->getMousePosition());
+		if (slash_state) {
+			mark(p_mouse_event->getMousePosition());
+		}
+		else
+			fire(p_mouse_event->getMousePosition());
 	}
+
+	if (can_slash && (p_mouse_event->getMouseAction() == df::CLICKED) &&
+		(p_mouse_event->getMouseButton() == df::Mouse::RIGHT))
+		slash();
 }
 
 // Move up or down
@@ -196,4 +218,31 @@ void Hero::nuke() {
 	df::Sound* p_sound = RM.getSound("nuke");
 	if (p_sound)
 		p_sound->play();
+}
+
+void Hero::slash() {
+	// Set chain_state to true
+	slash_state = true;
+
+	// Create new "Chain" object and draw text
+	Slash* slashtext = new Slash();
+	slashtext->draw();
+
+	// Create "chain" event and send to interested Objects
+	EventSlash slash;
+	WM.onEvent(&slash);
+
+	// Shake screen (severity 10 pixels x&y, duration 5 frames).
+	//DM.shake(10, 10, 5);
+
+	// Make a big explosion with particles.
+	df::addParticles(df::RINGS, df::Vector(getPosition().getX(), getPosition().getY() + (getBox().getVertical() / 4)), 2, df::GREEN);
+
+	// Sets can_chain to false
+	can_slash = false;
+}
+
+void Hero::mark(df::Vector loc) {
+	SlashAttack* slashAtk = new SlashAttack(loc);
+	slashAtk->draw();
 }

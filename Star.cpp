@@ -7,6 +7,8 @@
 
 // Engine includes
 #include "EventOut.h"
+#include "EventSlash.h"
+#include "EventSlashEnd.h"
 #include "DisplayManager.h"
 #include "WorldManager.h"
 
@@ -32,6 +34,10 @@ Star::Star() {
 	// Draws the Star in the background
 	setAltitude(0);
 
+	// Registers Chain and ChainEnd event
+	registerInterest(SLASH_EVENT);
+	registerInterest(SLASHEND_EVENT);
+
 	// Sets position to random place in window
 	df::Vector p((float)(rand() % (int)WM.getBoundary().getHorizontal()),
 		(float)(rand() % (int)WM.getBoundary().getVertical()));
@@ -39,9 +45,19 @@ Star::Star() {
 
 	// Gives motion parallax effect for Star movement
 	setVelocity(df::Vector((float)-1.0 / (rand() % 10 + 1), 0));
+	rememberVel = getVelocity();
 }
 
 int Star::eventHandler(const df::Event* p_e) {
+	if (p_e->getType() == SLASH_EVENT) {
+		setVelocity(df::Vector(0, 0));
+	}
+
+	if (p_e->getType() == SLASHEND_EVENT) {
+		setVelocity(rememberVel);
+		return 1;
+	}
+
 	if (p_e->getType() == df::OUT_EVENT) {
 		out();
 		return 1;

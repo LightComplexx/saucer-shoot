@@ -11,6 +11,8 @@
 #include "ResourceManager.h"
 #include "EventOut.h"
 #include "EventNuke.h"
+#include "EventSlash.h"
+#include "EventSlashEnd.h"
 #include "EventView.h"
 
 // Game includes
@@ -25,8 +27,10 @@ Saucer::Saucer() {
 	// Sets object type
 	setType("Saucer");
 
-	// Registers Nuke and Chain and ChainEnd events
+	// Registers Nuke and Slash and SlashEnd events
 	registerInterest(NUKE_EVENT);
+	registerInterest(SLASH_EVENT);
+	registerInterest(SLASHEND_EVENT);
 
 	// Sets speed in horizontal direction
 	m_speed = -0.25;
@@ -35,8 +39,8 @@ Saucer::Saucer() {
 	// Sets starting location in the middle of window
 	moveToStart();
 
-	// Initiate chain state
-	chain_state = false;
+	// Initiate slash state
+	slash_state = false;
 }
 
 Saucer::~Saucer() {
@@ -47,6 +51,17 @@ Saucer::~Saucer() {
 }
 
 int Saucer::eventHandler(const df::Event* p_e) {
+	if (p_e->getType() == SLASH_EVENT) {
+		setVelocity(df::Vector(0, 0));
+	}
+
+	if (p_e->getType() == SLASHEND_EVENT) {
+		// Create an explosion
+		if (!slash_state) {
+			setVelocity(df::Vector(m_speed, 0));
+		}
+	}
+
 	if (p_e->getType() == df::OUT_EVENT) {
 		out();
 		return 1;
@@ -135,6 +150,16 @@ void Saucer::hit(const df::EventCollision* p_c) {
 		((p_c->getObject2()->getType()) == "Hero")) {
 		WM.markForDelete(p_c->getObject1());
 		WM.markForDelete(p_c->getObject2());
+	}
+
+	// If SlashAttack...
+	if ((p_c->getObject1()->getType() == "SlashAttack") ||
+		(p_c->getObject2()->getType() == "SlashAttack")) {
+		// Set slash state to true
+		slash_state = true;
+
+		// Create new saucer
+		new Saucer;
 	}
 }
 

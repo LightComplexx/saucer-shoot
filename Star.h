@@ -10,6 +10,7 @@
 class Star : public df::Object {
 
 private:
+    df::Vector rememberVel;
     void out();
 
 public:
