@@ -27,7 +27,7 @@ Saucer::Saucer() {
 	// Sets object type
 	setType("Saucer");
 
-	// Registers Nuke and Slash and SlashEnd events
+	// Registers Nuke, Slash and SlashEnd events
 	registerInterest(NUKE_EVENT);
 	registerInterest(SLASH_EVENT);
 	registerInterest(SLASHEND_EVENT);

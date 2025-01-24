@@ -1,0 +1,68 @@
+<HEADER>
+frames 7
+width 7
+height 7
+color white
+slowdown 4
+</HEADER>
+<BODY>
+      .
+     * 
+       
+       
+       
+       
+       
+end
+      .
+     . 
+   .-. 
+   *   
+       
+       
+       
+end
+      .
+     * 
+   .-. 
+  .--. 
+ .-.   
+ *     
+.      
+end
+       
+     * 
+   .-. 
+  .--. 
+ .-.   
+ *     
+.      
+end
+       
+       
+    *  
+  .-.  
+ .-.   
+ *     
+.      
+end
+       
+       
+       
+   .   
+ .-.   
+ *     
+.      
+end
+       
+       
+       
+       
+       
+ .     
+.      
+end
+</BODY>
+<FOOTER>
+version 1
+</FOOTER>

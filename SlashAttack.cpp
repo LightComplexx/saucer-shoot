@@ -22,17 +22,17 @@ SlashAttack::SlashAttack(df::Vector location) {
 	// Sets object to type Slash
 	setType("SlashAttack");
 
-	// Sets sprite
-	setSprite("flash");
+	// Sets sprite for when saucer is slashed
+	setSprite("saucerslashed");
 
-	// Makes the ChainAttack spectral so it can pass through objects 
-	// and not impede movement
+	// Makes the SaucerSlashed sprite spectral so it can pass through 
+	// objects and not impede movement
 	setSolidness(df::HARD);
 
-	// Draws the ChainAttack in the background
+	// Draws the SaucerSlashed sprite in the background
 	setAltitude(df::MAX_ALTITUDE);
 
-	// Registers for step and mouse events
+	// Registers SLASHEND event
 	registerInterest(SLASHEND_EVENT);
 
 	// Set position

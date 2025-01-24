@@ -22,14 +22,14 @@ Timebar::Timebar() {
 	else
 		time_to_live = 0;
 
-	// Makes the Chain text spectral so it can pass through objects 
+	// Makes the Timebar spectral so it can pass through objects 
 	// and not impede movement
 	setSolidness(df::SPECTRAL);
 
 	// Draws the Timebar in the background
 	setAltitude(df::MAX_ALTITUDE);
 
-	// Registers for step and mouse events
+	// Registers step event
 	registerInterest(df::STEP_EVENT);
 
 	// Set position

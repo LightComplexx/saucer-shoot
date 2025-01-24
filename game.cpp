@@ -63,7 +63,7 @@ void loadResources() {
 	RM.loadSprite("sprites/ship-spr.txt", "ship");
 	RM.loadSprite("sprites/timebar-spr.txt", "timebar");
 	RM.loadSprite("sprites/slashtext-spr.txt", "slashtext");
-	RM.loadSprite("sprites/flash-spr.txt", "flash");
+	RM.loadSprite("sprites/saucerslashed-spr.txt", "saucerslashed");
 }
 
 void populateWorld() {

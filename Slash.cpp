@@ -16,7 +16,7 @@ Slash::Slash() {
 	// Sets object to type Slash
 	setType("Slash");
 
-	// Sets sprite
+	// Sets sprite for 'Dimensional Slash' text
 	if (setSprite("slashtext") == 0)
 		time_to_live = getAnimation().getSprite()->getFrameCount() * getAnimation().getSprite()->getSlowdown() * 4;
 	else
@@ -32,7 +32,7 @@ Slash::Slash() {
 	// Sets location to top center of window
 	setLocation(df::CENTER_CENTER);
 
-	// Registers for step and mouse events
+	// Registers step event
 	registerInterest(df::STEP_EVENT);
 }
 
