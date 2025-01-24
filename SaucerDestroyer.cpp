@@ -4,6 +4,7 @@
 
 // Engine includes
 #include "DisplayManager.h"
+#include "ResourceManager.h"
 
 // Game includes
 #include "SaucerDestroyer.h"
@@ -22,31 +23,41 @@ SaucerDestroyer::SaucerDestroyer(df::ObjectList filtered_saucers, int interval, 
 	destroy_interval = interval;
 
 	// Initialize deletion limit and step count
-	max_num = max_delete;
+	delete_limit = max_delete;
 	step_count = 0;
+	deleted_count = 0;
 
 	// Register for step events.
 	registerInterest(df::STEP_EVENT);
 }
 
 int SaucerDestroyer::eventHandler(const df::Event* p_event) {
-	// Counter for deleted saucers
-	int deleted_count = 0;
-
 	if (p_event->getType() == df::STEP_EVENT) {
 		// Increase step counter
 		step_count++;
 		// Delete saucers 
-		if (step_count >= destroy_interval && !saucers.isEmpty() && deleted_count < max_num) {
+		if (step_count >= destroy_interval && !saucers.isEmpty() && deleted_count < delete_limit) {
 			// Iterator for saucer list
 			df::ObjectListIterator it(&saucers);
 			if (!it.isDone()) {
 				// Create slash attack at saucer location
 				new SlashAttack(it.currentObject()->getPosition());
 
+				// Play "input success" sound
+				df::Sound* p_sound = RM.getSound("sword slash");
+				if (p_sound) {
+					p_sound->play();
+				}
+
 				// Create an explosion
 				Explosion* p_explosion = new Explosion;
 				p_explosion->setPosition(it.currentObject()->getPosition());
+
+				// Play "explosion" sound
+				df::Sound* e_sound = RM.getSound("explode");
+				if (e_sound) {
+					e_sound->play();
+				}
 
 				// Shake screen (severity 5 pixels x&y, duration 5 frames).
 				DM.shake(5, 5, 5);
@@ -62,11 +73,11 @@ int SaucerDestroyer::eventHandler(const df::Event* p_event) {
 		}
 
 		// Destroy the controller when done
-		if (deleted_count >= max_num || saucers.isEmpty()) {
-			// Create 5 saucers before destroying self
+		if (deleted_count >= delete_limit || saucers.isEmpty()) {
+			// Create 5 saucers with 2x speed before destroying self
 			for (size_t i = 0; i < 5; i++)
 			{
-				new Saucer;
+				new Saucer(-0.5);
 			}
 			WM.markForDelete(this);
 		}

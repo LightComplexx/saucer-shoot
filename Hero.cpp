@@ -51,8 +51,8 @@ Hero::Hero() {
 	fire_countdown = fire_slowdown;
 
 	// Sets slowdown and countdown for slash
-	slash_slowdown = 1000;
-	slash_countdown = 0;
+	slash_slowdown = 600; // default 600
+	slash_countdown = slash_slowdown;
 
 	// Sets the nuke count
 	nuke_count = 1;
@@ -99,6 +99,10 @@ Hero::~Hero() {
 
 	// Mark Reticle for deletion
 	WM.markForDelete(p_reticle);
+
+	// Mark slash notice for deletion
+	slash_notice->clearText();
+	WM.markForDelete(slash_notice);
 }
 
 // Records keyboard and step events
@@ -232,7 +236,7 @@ void Hero::step() {
 		// Update slash notice when available
 		if (can_draw_notice) {
 			slash_notice = new df::TextBox();
-			slash_notice->setLocation(df::TOP_CENTER);
+			slash_notice->setPosition(df::Vector(WM.getBoundary().getHorizontal() / 2, 2));
 			slash_notice->setViewString("notice");
 			slash_notice->setSize(df::Vector(28, 1));
 			slash_notice->setText("Dimensional Slash Available!");
@@ -295,7 +299,10 @@ void Hero::startSlash() {
 
 	// Disable slash notice
 	slash_notice->clearText();
-	WM.getInstance().markForDelete(slash_notice);
+	WM.markForDelete(slash_notice);
+
+	// Disable input
+	disable_input = true;
 
 	// Set Slash_state to true
 	slash_state = true;
@@ -342,7 +349,7 @@ void Hero::slash(int num_saucers) {
 
 	// Clear direction list display
 	comb_display->clearText();
-	WM.getInstance().markForDelete(comb_display);
+	WM.markForDelete(comb_display);
 }
 
 void Hero::modifyDisplay(df::Keyboard::Key input) {
@@ -352,6 +359,13 @@ void Hero::modifyDisplay(df::Keyboard::Key input) {
 		correct_dir_count++;
 		direction_list[spot_in_direc_list] = 'O';
 		direction_list[spot_in_direc_list + 1] = 'O';
+		
+		// Play "input success" sound
+		df::Sound* p_sound = RM.getSound("input success");
+		if (p_sound) {
+			p_sound->play();
+		}
+
 		// Go to next entry if it exists
 		if (spot_in_direc_list + 6 < direction_list.length())
 			spot_in_direc_list += 6;
@@ -366,13 +380,19 @@ void Hero::modifyDisplay(df::Keyboard::Key input) {
 			}
 		}
 	}
-	// Display 'XX' for incorrect input
-	// Disable input immediately
 	else {
+		// Display 'XX' for incorrect input
 		direction_list[spot_in_direc_list] = 'X';
 		direction_list[spot_in_direc_list + 1] = 'X';
 		comb_display->setColor(df::RED);
+		// Disable input immediately
 		disable_input = true;
+		// Play "input fail" sound
+		df::Sound* p_sound = RM.getSound("input fail");
+		if (p_sound) {
+			p_sound->play();
+		}
+
 		// Disable collisions for saucers to be destroyed
 		for (size_t i = 0; i < correct_dir_count; i++)
 		{
@@ -441,4 +461,12 @@ bool Hero::checkDirectionInput(df::Keyboard::Key input, int spot_in_string) {
 		return direction_list[spot_in_string] == '^';
 	}
 	}
+}
+
+bool Hero::getDisableInput() {
+	return disable_input;
+}
+
+void Hero::setDisableInput(bool state) {
+	disable_input = state;
 }

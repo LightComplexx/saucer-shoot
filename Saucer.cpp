@@ -21,7 +21,7 @@
 #include "Explosion.h"
 #include "Points.h"
 
-Saucer::Saucer() {
+Saucer::Saucer(float speed) {
 	// Setup "saucer" sprite
 	setSprite("saucer");
 
@@ -34,7 +34,7 @@ Saucer::Saucer() {
 	registerInterest(SLASHEND_EVENT);
 
 	// Sets speed in horizontal direction
-	m_speed = -0.25;
+	m_speed = speed;
 	setVelocity(df::Vector(m_speed, 0)); // 1 space left every 4 frames
 
 	// Sets starting location in the middle of window
@@ -91,7 +91,8 @@ void Saucer::out() {
 	if (getPosition().getX() >= 0)
 		return;
 	else {
-		//setVelocity(df::Vector(moveSpeed - 0.05, 0));
+		// Increase saucer speed if player fails to kill
+		setVelocity(df::Vector(m_speed - 0.15, 0));
 		moveToStart();
 
 		// Spawn new Saucer to make the game get harder

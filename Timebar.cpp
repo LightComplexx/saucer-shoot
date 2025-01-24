@@ -7,8 +7,11 @@
 #include "WorldManager.h"
 #include "EventStep.h"
 #include "EventSlashEnd.h"
+#include "ObjectList.h"
+#include "ObjectListIterator.h"
 
 // Game includes
+#include "Hero.h"
 #include "Timebar.h"
 #include "SlashAttack.h"
 
@@ -34,6 +37,21 @@ Timebar::Timebar() {
 
 	// Set position
 	setLocation(df::TOP_CENTER);
+
+	// Find Hero object and enable inputs
+	df::ObjectList all_objects = df::WorldManager::getInstance().getAllObjects();
+	df::ObjectListIterator it(&all_objects);
+	while (!it.isDone()) {
+		df::Object* obj = it.currentObject();
+		if (obj->getType() == "Hero") {
+			Hero* hero = dynamic_cast<Hero*>(obj);
+			if (hero) {
+				hero->setDisableInput(false);
+			}
+			break;
+		}
+		it.next();
+	}
 }
 
 Timebar::~Timebar() {

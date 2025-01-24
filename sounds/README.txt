@@ -4,6 +4,8 @@ Mark Claypool
 
 Music:
 
+custom-start-music by Rodrick Moore
+-- inspiration -- 
 start-music - "Jungle Starvation", by RepaidGateman 
 http://www.flashkit.com/loops/Ambient/Electronica/Jungle_S-RepaidGa-10582/index.php
 

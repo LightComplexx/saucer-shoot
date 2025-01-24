@@ -57,4 +57,6 @@ public:
     Hero();
     ~Hero();
     int eventHandler(const df::Event* p_e) override;
+    void setDisableInput(bool state);
+    bool getDisableInput();
 };

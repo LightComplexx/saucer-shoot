@@ -4,6 +4,7 @@
 
 // Engine includes
 #include "WorldManager.h"
+#include "EventSlash.h"
 
 // Game includes
 #include "Bullet.h"
@@ -26,6 +27,9 @@ Bullet::Bullet(df::Vector hero_pos) {
 
 	// Makes the Bullets soft so can pass through Hero
 	setSolidness(df::SOFT);
+
+	// Register slash event
+	registerInterest(SLASH_EVENT);
 }
 
 int Bullet::eventHandler(const df::Event* p_e) {
@@ -33,6 +37,12 @@ int Bullet::eventHandler(const df::Event* p_e) {
 		const df::EventCollision* p_collision_event =
 			dynamic_cast <const df::EventCollision*> (p_e);
 		hit(p_collision_event);
+		return 1;
+	}
+
+	// Slash event
+	if (p_e->getType() == SLASH_EVENT) {
+		WM.markForDelete(this);
 		return 1;
 	}
 	return 0;

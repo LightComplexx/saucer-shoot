@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	populateWorld();
 
 	// Enable player to pause game
-	new df::Pause(df::Keyboard::ESCAPE);
+	new df::Pause(df::Keyboard::F10);
 
 	// Run game (this blocks until game loop is over)
 	GM.run();
@@ -68,11 +68,14 @@ void loadResources() {
 
 void populateWorld() {
 	// Load needed game sounds
+	RM.loadMusic("sounds/custom-start-music.wav", "start music");
 	RM.loadSound("sounds/fire.wav", "fire");
 	RM.loadSound("sounds/explode.wav", "explode");
 	RM.loadSound("sounds/nuke.wav", "nuke");
 	RM.loadSound("sounds/game-over.wav", "game over");
-	RM.loadMusic("sounds/custom-start-music.wav", "start music");
+	RM.loadSound("sounds/input-fail.wav", "input fail");
+	RM.loadSound("sounds/input-success.wav", "input success");
+	RM.loadSound("sounds/sword-slash.wav", "sword slash");
 
 	// Create some Stars
 	for (int i = 0; i < 16; i++)

@@ -11,10 +11,11 @@
 
 class SaucerDestroyer : public df::Object {
 private:
-    df::ObjectList saucers; // List of saucer objects
-    int destroy_interval;  // Steps between destruction
-    int max_num;           // max number to delete
-    int step_count;        // Tracks game steps
+    df::ObjectList saucers;
+    int destroy_interval;
+    int delete_limit;
+    int step_count;
+    int deleted_count;
 
 public:
     SaucerDestroyer(df::ObjectList filtered_saucers, int interval, int max_delete);

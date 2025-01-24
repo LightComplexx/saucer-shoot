@@ -18,7 +18,7 @@ private:
 	float m_speed;
 
 public:
-	Saucer();
+	Saucer(float speed = -0.25);
 	~Saucer();
 	int eventHandler(const df::Event* p_e) override;
 	void disableCollisions();
