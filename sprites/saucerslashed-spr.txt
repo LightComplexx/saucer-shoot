@@ -3,7 +3,7 @@ frames 7
 width 7
 height 7
 color white
-slowdown 4
+slowdown 1
 </HEADER>
 <BODY>
       .

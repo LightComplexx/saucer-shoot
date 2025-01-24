@@ -25,7 +25,7 @@ private:
     void kbd(const df::EventKeyboard* p_keyboard_event);
     void mouse(const df::EventMouse* p_mouse_event);
     void fire(df::Vector target);
-    void slash();
+    void slash(int num_saucers);
     void move(int dy);
     void step();
     void nuke();
@@ -36,15 +36,22 @@ private:
     std::string mapDirectionToString(Direction direc);
     std::string direction_list;
     int spot_in_direc_list;
+    int correct_dir_count;
     int move_slowdown;
     int move_countdown;
     int fire_slowdown;
     int fire_countdown;
+    int slash_slowdown;
+    int slash_countdown;
     int nuke_count;
     bool can_slash;
     bool slash_state;
+    bool disable_input;
+    bool can_draw_notice;
     Reticle* p_reticle;
     df::TextBox* comb_display;
+    df::TextBox* slash_notice;
+    df::ObjectList filtered_saucers;
 
 public:
     Hero();

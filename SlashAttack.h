@@ -6,9 +6,11 @@
 #include "ViewObject.h"
 
 class SlashAttack : public df::ViewObject {
+private:
+	int time_to_live;
+
 public:
 	SlashAttack(df::Vector location);
-	~SlashAttack();
-	int draw() override;
+	int draw();
 	int eventHandler(const df::Event* p_e);
 };

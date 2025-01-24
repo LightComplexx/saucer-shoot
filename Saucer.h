@@ -14,10 +14,12 @@ private:
 	void out();
 	void hit(const df::EventCollision* p_c);
 	bool slash_state;
+	bool collisions_active;
 	float m_speed;
 
 public:
 	Saucer();
 	~Saucer();
 	int eventHandler(const df::Event* p_e) override;
+	void disableCollisions();
 };

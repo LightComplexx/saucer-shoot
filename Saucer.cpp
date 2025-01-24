@@ -8,6 +8,7 @@
 // Engine includes
 #include "LogManager.h"
 #include "WorldManager.h"
+#include "DisplayManager.h"
 #include "ResourceManager.h"
 #include "EventOut.h"
 #include "EventNuke.h"
@@ -67,7 +68,7 @@ int Saucer::eventHandler(const df::Event* p_e) {
 		return 1;
 	}
 
-	if (p_e->getType() == df::COLLISION_EVENT) {
+	if (collisions_active && p_e->getType() == df::COLLISION_EVENT) {
 		const df::EventCollision* p_collision_event =
 			dynamic_cast <const df::EventCollision*> (p_e);
 		hit(p_collision_event);
@@ -151,15 +152,9 @@ void Saucer::hit(const df::EventCollision* p_c) {
 		WM.markForDelete(p_c->getObject1());
 		WM.markForDelete(p_c->getObject2());
 	}
+}
 
-	// If SlashAttack...
-	if ((p_c->getObject1()->getType() == "SlashAttack") ||
-		(p_c->getObject2()->getType() == "SlashAttack")) {
-		// Set slash state to true
-		slash_state = true;
-
-		// Create new saucer
-		new Saucer;
-	}
+void Saucer::disableCollisions() {
+	collisions_active = false;
 }
 

@@ -23,7 +23,7 @@
 #include "Bullet.h"
 #include "GameOver.h"
 #include "Slash.h"
-#include "SlashAttack.h"
+#include "SaucerDestroyer.h"
 
 Hero::Hero() {
 	// Link to "ship" sprite
@@ -50,19 +50,31 @@ Hero::Hero() {
 	fire_slowdown = 7;
 	fire_countdown = fire_slowdown;
 
+	// Sets slowdown and countdown for slash
+	slash_slowdown = 1000;
+	slash_countdown = 0;
+
 	// Sets the nuke count
 	nuke_count = 1;
 
-	// Sets the Hero's ability to use slash attack 
-	can_slash = true;
+	// Sets the Hero's ability to use slash attack
+	can_slash = false;
 	slash_state = false;
+
+	// Whether keys will register or not
+	disable_input = false;
 
 	// Initialize direction list to empty string
 	direction_list = "";
 	spot_in_direc_list = 0;
+	correct_dir_count = 0;
 
 	// Initialize display
 	comb_display = NULL;
+	slash_notice = NULL;
+
+	// Set can draw notice
+	can_draw_notice = true;
 
 	// Create reticle for firing bullets
 	p_reticle = new Reticle(df::RED);
@@ -90,7 +102,7 @@ Hero::~Hero() {
 // Records keyboard and step events
 int Hero::eventHandler(const df::Event* p_e) {
 	// Keyboard events
-	if (p_e->getType() == df::KEYBOARD_EVENT) {
+	if (!disable_input && p_e->getType() == df::KEYBOARD_EVENT) {
 		const df::EventKeyboard* p_keyboard_event =
 			dynamic_cast <const df::EventKeyboard*> (p_e);
 		kbd(p_keyboard_event);
@@ -112,8 +124,8 @@ int Hero::eventHandler(const df::Event* p_e) {
 	}
 
 	// SlashEnd events
-	if (slash_state && p_e->getType() == SLASHEND_EVENT) {
-		slash_state = false;
+	if (p_e->getType() == SLASHEND_EVENT) {
+		slash(correct_dir_count);
 		return 1;
 	}
 	return 0;
@@ -177,7 +189,7 @@ void Hero::mouse(const df::EventMouse* p_mouse_event) {
 			fire(p_mouse_event->getMousePosition());
 	}
 
-	if (can_slash && (p_mouse_event->getMouseAction() == df::CLICKED) &&
+	if ((p_mouse_event->getMouseAction() == df::CLICKED) &&
 		(p_mouse_event->getMouseButton() == df::Mouse::RIGHT))
 		startSlash();
 }
@@ -207,6 +219,25 @@ void Hero::step() {
 	fire_countdown--;
 	if (fire_countdown < 0)
 		fire_countdown = 0;
+
+	// Slash countdown
+	if (!slash_state)
+		slash_countdown--;
+
+	if (slash_countdown < 0) {
+		if (can_draw_notice) {
+			slash_notice = new df::TextBox();
+			slash_notice->setLocation(df::TOP_CENTER);
+			slash_notice->setViewString("notice");
+			slash_notice->setSize(df::Vector(28, 1));
+			slash_notice->setText("Dimensional Slash Available!");
+			slash_notice->setColor(df::YELLOW);
+
+			can_draw_notice = false;
+		}
+		can_slash = true;
+		slash_countdown = 0;
+	}
 }
 
 void Hero::fire(df::Vector target) {
@@ -253,6 +284,13 @@ void Hero::nuke() {
 }
 
 void Hero::startSlash() {
+	if (!can_slash)
+		return;
+
+	// Disable slash notice
+	slash_notice->clearText();
+	WM.getInstance().markForDelete(slash_notice);
+
 	// Set Slash_state to true
 	slash_state = true;
 
@@ -263,7 +301,7 @@ void Hero::startSlash() {
 	comb_display = new df::TextBox;
 	comb_display->setLocation(df::CENTER_CENTER);
 	comb_display->setViewString("Combination List");
-	comb_display->setSize(df::Vector(50, 1));
+	comb_display->setSize(df::Vector(50, 1 + (1 * (curr_list.length() > 50))));
 	comb_display->setText(curr_list);
 	comb_display->setColor(df::YELLOW);
 
@@ -275,47 +313,53 @@ void Hero::startSlash() {
 	EventSlash slash;
 	WM.onEvent(&slash);
 
-	// Shake screen (severity 10 pixels x&y, duration 5 frames).
-	//DM.shake(10, 10, 5);
-
 	// Make a big explosion with particles.
 	df::addParticles(df::RINGS, df::Vector(getPosition().getX(), getPosition().getY() + (getBox().getVertical() / 4)), 2, df::GREEN);
 
-	// Sets can_slash to false
+	// Disable ability to slash
 	can_slash = false;
 }
 
-void Hero::slash() {
-	df::ObjectList allObjects = df::WorldManager::getInstance().getAllObjects();
-	df::ObjectListIterator it(&allObjects);
-
-	float world_horiz = WM.getBoundary().getHorizontal();
-
-	while (!it.isDone()) {
-		df::Object* obj = it.currentObject();
-		if (obj->getType() == "Saucer" && obj->getPosition().getX() < world_horiz) {
-			SlashAttack* slashAtk = new SlashAttack(obj->getPosition());
-			slashAtk->draw();
-		}
-		it.next();
-	}
+void Hero::slash(int num_saucers) {
+	new SaucerDestroyer(filtered_saucers, 5, correct_dir_count);
+	slash_state = false;
+	disable_input = false;
+	slash_countdown = slash_slowdown;
+	correct_dir_count = 0;
+	spot_in_direc_list = 0;
+	filtered_saucers.clear();
+	direction_list.clear();
+	can_draw_notice = true;
+	comb_display->clearText();
+	WM.getInstance().markForDelete(comb_display);
 }
 
 void Hero::modifyDisplay(df::Keyboard::Key input) {
 	if (checkDirectionInput(input, spot_in_direc_list)) {
+		correct_dir_count++;
 		direction_list[spot_in_direc_list] = 'O';
-		direction_list[spot_in_direc_list+1] = 'O';
+		direction_list[spot_in_direc_list + 1] = 'O';
 
-		if (spot_in_direc_list + 4 < direction_list.length())
-			spot_in_direc_list += 4;
+		if (spot_in_direc_list + 6 < direction_list.length())
+			spot_in_direc_list += 6;
 		else {
 			comb_display->setColor(df::GREEN);
+			disable_input = true;
+			for (size_t i = 0; i < correct_dir_count; i++)
+			{
+				filtered_saucers[i]->setSolidness(df::SPECTRAL);
+			}
 		}
 	}
 	else {
 		direction_list[spot_in_direc_list] = 'X';
-		direction_list[spot_in_direc_list++] = 'X';
+		direction_list[spot_in_direc_list + 1] = 'X';
 		comb_display->setColor(df::RED);
+		disable_input = true;
+		for (size_t i = 0; i < correct_dir_count; i++)
+		{
+			filtered_saucers[i]->setSolidness(df::SPECTRAL);
+		}
 	}
 
 	// Update display
@@ -323,20 +367,20 @@ void Hero::modifyDisplay(df::Keyboard::Key input) {
 }
 
 std::string Hero::updateDirectionList(std::string type) {
-	df::ObjectList allObjects = df::WorldManager::getInstance().getAllObjects();
+	df::ObjectList allObjects = WM.getAllObjects();
 	df::ObjectListIterator it(&allObjects);
 
 	float world_horiz = WM.getBoundary().getHorizontal();
 
-	// Reinitialize direction list
-	direction_list = "";
-	spot_in_direc_list = 0;
-
-	while (!it.isDone()) {
+	while (!it.isDone() && filtered_saucers.getCount() < 15) {
 		df::Object* obj = it.currentObject();
 		if (obj->getType() == type && obj->getPosition().getX() < world_horiz) {
 			Direction direc = Direction(rand() % 4);
-			direction_list.append(mapDirectionToString(direc) + ", ");
+			direction_list.append(mapDirectionToString(direc) + " || ");
+
+			// Add the filtered saucer to the new ObjectList
+			// Disable collisions
+			filtered_saucers.insert(obj);
 		}
 		it.next();
 	}
