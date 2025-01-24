@@ -74,7 +74,8 @@ void GameStart::start() {
 	// Setup heads-up display
 	new Points;	// points display
 
-	df::ViewObject* p_vo = new df::ViewObject; // nuke_count display
+	// nuke_count display
+	df::ViewObject* p_vo = new df::ViewObject;
 	p_vo->setLocation(df::TOP_LEFT);
 	p_vo->setViewString("Nukes");
 	p_vo->setValue(1);
