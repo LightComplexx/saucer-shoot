@@ -13,7 +13,7 @@ Directory Structure:
 --Controls--
 ** 'W' and 'S' to move up and down
 ** 'Left Click' to shoot
-** 'Right Click' activates Dimensional Slash
+** 'Right Click' activates Dimensional Slash (resets every 600 steps)
 ** 'Space' activates a nuke that kills all Saucers within the window (only 1)
 ** 'F:10' to pause the game (game resumes once another button 
    other than the pause button is pressed)

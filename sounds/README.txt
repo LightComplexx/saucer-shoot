@@ -2,6 +2,8 @@ Sprite art:
 
 Mark Claypool
 
+Additional Sprites by Rodrick Moore
+
 Music:
 
 custom-start-music by Rodrick Moore
@@ -22,3 +24,12 @@ http://www.flashkit.com/soundfx/Cartoon/Explosions/Nuklear_-Staberxp-8147/index.
 
 game over - BOOOOOMMM!!!, by Katanaman
 http://www.flashkit.com/imagesvr_ce/flashkit/soundfx/Cartoon/Explosions/BOOOOOMM-Katanama-7525/BOOOOOMM-Katanama-7525_hifi.mp3
+
+input success - "Success", by UpdatePelgo
+https://pixabay.com/sound-effects/success-221935/
+
+input fail - "game fail", by Leszek_Szary
+https://pixabay.com/sound-effects/game-fail-90322/
+
+sword slash - by Rodrick Moore
+https://tinyurl.com/2cs7nvvo (JummBox link)
