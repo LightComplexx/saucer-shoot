@@ -11,10 +11,17 @@
 #include "Explosion.h"
 #include "Saucer.h"
 
-SaucerDestroyer::SaucerDestroyer(df::ObjectList filtered_saucers, int interval, int max_delete) { // 30 steps ~ 1 second (assuming 30 FPS)
+SaucerDestroyer::SaucerDestroyer(df::ObjectList filtered_saucers, int interval, int max_delete) {
+	// Set type to SaucerDestroyer
 	setType("SaucerDestroyer");
+
+	// Intialize saucer list
 	saucers = filtered_saucers;
+
+	// Initialize time interval for destruction
 	destroy_interval = interval;
+
+	// Initialize deletion limit and step count
 	max_num = max_delete;
 	step_count = 0;
 
@@ -23,12 +30,15 @@ SaucerDestroyer::SaucerDestroyer(df::ObjectList filtered_saucers, int interval, 
 }
 
 int SaucerDestroyer::eventHandler(const df::Event* p_event) {
+	// Counter for deleted saucers
 	int deleted_count = 0;
 
 	if (p_event->getType() == df::STEP_EVENT) {
+		// Increase step counter
 		step_count++;
-
+		// Delete saucers 
 		if (step_count >= destroy_interval && !saucers.isEmpty() && deleted_count < max_num) {
+			// Iterator for saucer list
 			df::ObjectListIterator it(&saucers);
 			if (!it.isDone()) {
 				// Create slash attack at saucer location
@@ -53,6 +63,7 @@ int SaucerDestroyer::eventHandler(const df::Event* p_event) {
 
 		// Destroy the controller when done
 		if (deleted_count >= max_num || saucers.isEmpty()) {
+			// Create 5 saucers before destroying self
 			for (size_t i = 0; i < 5; i++)
 			{
 				new Saucer;

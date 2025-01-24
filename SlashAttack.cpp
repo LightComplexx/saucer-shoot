@@ -19,10 +19,10 @@
 #include "Explosion.h"
 
 SlashAttack::SlashAttack(df::Vector location) {
-	// Sets object to type Slash
+	// Sets object to type SlashAttack
 	setType("SlashAttack");
 
-	// Sets sprite for 'Dimensional Slash' text
+	// Sets sprite for 'saucerslashed' attack
 	if (setSprite("saucerslashed") == 0)
 		time_to_live = getAnimation().getSprite()->getFrameCount() * getAnimation().getSprite()->getSlowdown();
 	else
@@ -44,6 +44,7 @@ SlashAttack::SlashAttack(df::Vector location) {
 
 
 int SlashAttack::eventHandler(const df::Event* p_e) {
+	// Animation countdown
 	if (p_e->getType() == df::STEP_EVENT) {
 		time_to_live--;
 		return 1;
@@ -53,6 +54,7 @@ int SlashAttack::eventHandler(const df::Event* p_e) {
 }
 
 int SlashAttack::draw() {
+	// Play animation once; delete once it ends
 	if (time_to_live <= 0) {
 		WM.markForDelete(this);
 		return -1;

@@ -37,11 +37,13 @@ Slash::Slash() {
 }
 
 Slash::~Slash() {
+	// Draw timebar once text disappears
 	Timebar* time = new Timebar();
 	time->draw();
 }
 
 int Slash::eventHandler(const df::Event* p_e) {
+	// Life countdown
 	if (p_e->getType() == df::STEP_EVENT) {
 		time_to_live--;
 		return 1;
@@ -51,6 +53,7 @@ int Slash::eventHandler(const df::Event* p_e) {
 }
 
 int Slash::draw() {
+	// Flash text until time delay ends
 	if (time_to_live <= 0) {
 		WM.markForDelete(this);
 		return -1;

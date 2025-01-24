@@ -67,6 +67,7 @@ void loadResources() {
 }
 
 void populateWorld() {
+	// Load needed game sounds
 	RM.loadSound("sounds/fire.wav", "fire");
 	RM.loadSound("sounds/explode.wav", "explode");
 	RM.loadSound("sounds/nuke.wav", "nuke");

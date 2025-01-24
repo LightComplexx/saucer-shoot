@@ -66,6 +66,8 @@ Hero::Hero() {
 
 	// Initialize direction list to empty string
 	direction_list = "";
+
+	// Initialize variables for direction list
 	spot_in_direc_list = 0;
 	correct_dir_count = 0;
 
@@ -133,6 +135,7 @@ int Hero::eventHandler(const df::Event* p_e) {
 
 // Take appropriate action according to key pressed
 void Hero::kbd(const df::EventKeyboard* p_keyboard_event) {
+	// Actions to take during slash_state
 	if (slash_state) {
 		switch (p_keyboard_event->getKey()) {
 		case df::Keyboard::W:    // up
@@ -156,6 +159,7 @@ void Hero::kbd(const df::EventKeyboard* p_keyboard_event) {
 			break;
 		}
 	}
+	// Actions to take outside slash_state
 	else {
 		switch (p_keyboard_event->getKey()) {
 		case df::Keyboard::Q:	// quit
@@ -182,13 +186,13 @@ void Hero::kbd(const df::EventKeyboard* p_keyboard_event) {
 }
 
 void Hero::mouse(const df::EventMouse* p_mouse_event) {
-	// Pressed button?
+	// Fire bullets if not in slash_state
 	if ((p_mouse_event->getMouseAction() == df::CLICKED) &&
 		(p_mouse_event->getMouseButton() == df::Mouse::LEFT)) {
 		if (!slash_state)
 			fire(p_mouse_event->getMousePosition());
 	}
-
+	// Start slash_state if available
 	if ((p_mouse_event->getMouseAction() == df::CLICKED) &&
 		(p_mouse_event->getMouseButton() == df::Mouse::RIGHT))
 		startSlash();
@@ -225,6 +229,7 @@ void Hero::step() {
 		slash_countdown--;
 
 	if (slash_countdown < 0) {
+		// Update slash notice when available
 		if (can_draw_notice) {
 			slash_notice = new df::TextBox();
 			slash_notice->setLocation(df::TOP_CENTER);
@@ -284,6 +289,7 @@ void Hero::nuke() {
 }
 
 void Hero::startSlash() {
+	// Check if player can slash
 	if (!can_slash)
 		return;
 
@@ -321,7 +327,10 @@ void Hero::startSlash() {
 }
 
 void Hero::slash(int num_saucers) {
+	// Destroy saucers with 5 step interval
 	new SaucerDestroyer(filtered_saucers, 5, correct_dir_count);
+
+	// Reinitialize all interested variables
 	slash_state = false;
 	disable_input = false;
 	slash_countdown = slash_slowdown;
@@ -330,32 +339,41 @@ void Hero::slash(int num_saucers) {
 	filtered_saucers.clear();
 	direction_list.clear();
 	can_draw_notice = true;
+
+	// Clear direction list display
 	comb_display->clearText();
 	WM.getInstance().markForDelete(comb_display);
 }
 
 void Hero::modifyDisplay(df::Keyboard::Key input) {
+	// Checks player input against direction list
 	if (checkDirectionInput(input, spot_in_direc_list)) {
+		// Display '00' for correct input
 		correct_dir_count++;
 		direction_list[spot_in_direc_list] = 'O';
 		direction_list[spot_in_direc_list + 1] = 'O';
-
+		// Go to next entry if it exists
 		if (spot_in_direc_list + 6 < direction_list.length())
 			spot_in_direc_list += 6;
+		// If not, disable input
 		else {
 			comb_display->setColor(df::GREEN);
 			disable_input = true;
+			// Disable collisions for saucers to be destroyed
 			for (size_t i = 0; i < correct_dir_count; i++)
 			{
 				filtered_saucers[i]->setSolidness(df::SPECTRAL);
 			}
 		}
 	}
+	// Display 'XX' for incorrect input
+	// Disable input immediately
 	else {
 		direction_list[spot_in_direc_list] = 'X';
 		direction_list[spot_in_direc_list + 1] = 'X';
 		comb_display->setColor(df::RED);
 		disable_input = true;
+		// Disable collisions for saucers to be destroyed
 		for (size_t i = 0; i < correct_dir_count; i++)
 		{
 			filtered_saucers[i]->setSolidness(df::SPECTRAL);
@@ -372,23 +390,25 @@ std::string Hero::updateDirectionList(std::string type) {
 
 	float world_horiz = WM.getBoundary().getHorizontal();
 
+	// Filters objects by saucers within in the visible play area
 	while (!it.isDone() && filtered_saucers.getCount() < 15) {
 		df::Object* obj = it.currentObject();
 		if (obj->getType() == type && obj->getPosition().getX() < world_horiz) {
+			// Assign random direction
 			Direction direc = Direction(rand() % 4);
 			direction_list.append(mapDirectionToString(direc) + " || ");
 
 			// Add the filtered saucer to the new ObjectList
-			// Disable collisions
 			filtered_saucers.insert(obj);
 		}
 		it.next();
 	}
-
+	// Returns list of directions
 	return direction_list;
 }
 
 std::string Hero::mapDirectionToString(Direction direc) {
+	// Maps direction enum to string identifier
 	switch (direc) {
 	case Direction::Left: {
 		return "<-";
@@ -406,6 +426,7 @@ std::string Hero::mapDirectionToString(Direction direc) {
 }
 
 bool Hero::checkDirectionInput(df::Keyboard::Key input, int spot_in_string) {
+	// Checks key input against string identifier
 	switch (input) {
 	case df::Keyboard::A: { // Left
 		return direction_list[spot_in_string] == '<';

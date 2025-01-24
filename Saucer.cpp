@@ -57,7 +57,6 @@ int Saucer::eventHandler(const df::Event* p_e) {
 	}
 
 	if (p_e->getType() == SLASHEND_EVENT) {
-		// Create an explosion
 		if (!slash_state) {
 			setVelocity(df::Vector(m_speed, 0));
 		}
