@@ -5,7 +5,7 @@ Platform: Windows
 
 
 Directory Structure: 
-- Edited menu music in /sounds
+- Remixed menu music and additional SFX in /sounds
 - New sprites in /sprites
 - New header/cpp files for new Slash Mechanic
 
@@ -14,15 +14,28 @@ Directory Structure:
 ** 'W' and 'S' to move up and down
 ** 'Left Click' to shoot
 ** 'Right Click' activates Dimensional Slash
-** 'Space' activates a nuke that kills everything
-** 'Esc' to pause the game (the game resumes once another button 
+** 'Space' activates a nuke that kills all Saucers within the window (only 1)
+** 'F:10' to pause the game (game resumes once another button 
    other than the pause button is pressed)
-** 'Q' to quit the game
+** 'Q' to self-destruct (activates Game Over screen, returns to title)
 
 
 --Dimensional Slash--
 
-* Once dimensional slash is activated, a list of arrow inputs
-  will appear in the middle of the screen based on how many
-  Saucers are visible in the window.
-* Player must press either 'W', 'A', 'S', or 'D'
+* Once dimensional slash is activated, movement is disabled, and
+  a list of arrow inputs will appear in the middle of the screen 
+  based on how many Saucers are visible in the window.
+
+* The number of Saucers destroyed will depend on how many 
+  correct inputs the player makes
+
+* If the player messes up an input, input is disabled
+
+*** Arrow Reference ***
+'^^' == Press 'W' (up)
+
+'<-' == Press 'A' (left)
+
+'vv' == Press 'S' (down)
+
+'->' == Press 'D' (right)

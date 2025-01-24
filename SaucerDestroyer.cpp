@@ -5,12 +5,14 @@
 // Engine includes
 #include "DisplayManager.h"
 #include "ResourceManager.h"
+#include "EventView.h"
 
 // Game includes
 #include "SaucerDestroyer.h"
 #include "SlashAttack.h"
 #include "Explosion.h"
 #include "Saucer.h"
+#include "Points.h"
 
 SaucerDestroyer::SaucerDestroyer(df::ObjectList filtered_saucers, int interval, int max_delete) {
 	// Set type to SaucerDestroyer
@@ -58,6 +60,11 @@ int SaucerDestroyer::eventHandler(const df::Event* p_event) {
 				if (e_sound) {
 					e_sound->play();
 				}
+
+				// Send "view" event with points to interested ViewObjects.
+				// Add 40 extra points.
+				df::EventView ev(POINTS_STRING, 40, true);
+				WM.onEvent(&ev);
 
 				// Shake screen (severity 5 pixels x&y, duration 5 frames).
 				DM.shake(5, 5, 5);

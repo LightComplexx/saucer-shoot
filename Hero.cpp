@@ -99,10 +99,6 @@ Hero::~Hero() {
 
 	// Mark Reticle for deletion
 	WM.markForDelete(p_reticle);
-
-	// Mark slash notice for deletion
-	slash_notice->clearText();
-	WM.markForDelete(slash_notice);
 }
 
 // Records keyboard and step events
@@ -298,7 +294,6 @@ void Hero::startSlash() {
 		return;
 
 	// Disable slash notice
-	slash_notice->clearText();
 	WM.markForDelete(slash_notice);
 
 	// Disable input
@@ -344,11 +339,10 @@ void Hero::slash(int num_saucers) {
 	correct_dir_count = 0;
 	spot_in_direc_list = 0;
 	filtered_saucers.clear();
-	direction_list.clear();
+	direction_list = "";
 	can_draw_notice = true;
 
 	// Clear direction list display
-	comb_display->clearText();
 	WM.markForDelete(comb_display);
 }
 
