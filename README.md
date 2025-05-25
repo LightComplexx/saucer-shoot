@@ -1,5 +1,35 @@
 # Saucer Shoot
+--------------------------------------------------------------------
 
+Rodrick Moore (WPI)
+
+### New Mechanic: Dimensional Slash
+[Showcase Video: https://youtu.be/pzb9QCP2wUw]
+
+* Once dimensional slash is activated, movement is disabled, and
+  a list of arrow inputs will appear in the middle of the screen 
+  based on how many Saucers are visible in the window.
+
+* The number of Saucers destroyed will depend on how many 
+  correct inputs the player makes
+
+* If the player messes up an input, input is disabled
+
+<b>Input Arrow Reference:</b>
+<ul>
+    <li>'^^' == Press 'W' (up)</li>
+    <li>'<-' == Press 'A' (left)</li>
+    <li>'vv' == Press 'S' (down)</li>
+    <li>'->' == Press 'D' (right)</li>
+</ul>
+
+<b>Extra Additions:</b>
+- Remixed menu music and additional SFX in /sounds
+- New sprites in /sprites
+- New header/cpp files for new Slash Mechanic
+
+--------------------------------------------------------------------
+# Credits
 Mark Claypool (WPI)  
 2016-2025
 
@@ -29,11 +59,13 @@ To build:
 
 Directories:
 
---------   ---------------------------------------------------------
-sounds/    contains the sound files used in Saucer shoot
-sprites/   contains the sprite files used in Saucer shoot
-vs-2022/   contains MS Visual Studio solution files (see README.md)
---------   ---------------------------------------------------------
+<ul>
+    <li>sounds/ contains the sound files used in Saucer shoot</li>
+    <li>sprites/ contains the sprite files used in Saucer shoot</li>
+    <li>vs-2022/ contains MS Visual Studio solution files (see README.md)
+</ul>
+
+--------------------------------------------------------------------
 
 Happy shooting!
 
